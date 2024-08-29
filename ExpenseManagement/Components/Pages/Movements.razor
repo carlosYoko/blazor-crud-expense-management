@@ -1,6 +1,6 @@
 ﻿@page "/movements"
 @using ExpenseManagement.Shared
-@attribute [StreamRendering]
+@rendermode InteractiveServer
 @inject HttpClient Http
 
 <h1>Movimientos</h1>
@@ -19,22 +19,6 @@
         </tr>
     </thead>
     <tbody>
-
-@*         @foreach (var movimiento in MovementList)
-        {
-            <tr>
-                <th scope="row">@movimiento.Id</th>
-                <th scope="row">@movimiento.Date</th>
-                <th scope="row">@movimiento.Description</th>
-                <th scope="row">@movimiento.Quantity</th>
-                <th scope="row">@movimiento.Type</th>
-                <th scope="row">@movimiento.User.Name</th>
-                <td>
-                    <button class="btn btn-success">Editar</button>
-                    <button class="btn btn-warning">Eliminar</button>
-                </td>
-            </tr>
-        } *@
 </tbody>
 </table>
 <br />
@@ -62,13 +46,13 @@
 
 <input type="text" class="form-control" @bind-value=movement.Description />
 <br />
-<button class="btn btn-primary" @onclick=NewMovement>Guardar</button>
+<button class="btn btn-primary" @onclick="NewMovement">Guardar</button>
+
 
 
 @code {
     public static List<User> UserList = new List<User>();
     User MyUser = new User();
-    // public static List<Movement> MovementList = new List<Movement>();
     Movement movement = new Movement();
 
     protected override async Task OnInitializedAsync()
@@ -81,5 +65,4 @@
     {
         var respuesta = await Http.PostAsJsonAsync("api/Movement/NewMovement", movement); 
     }
-
 }
