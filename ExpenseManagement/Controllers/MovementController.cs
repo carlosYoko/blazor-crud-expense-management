@@ -45,5 +45,22 @@ namespace ExpenseManagement.Controllers
             var movements = await _context.Movements.Include(u => u.User).ToListAsync();
             return movements;
         }
+
+        [HttpDelete("DeleteMovement")]
+        [Route("{id}")]
+        public async Task<ActionResult<string>> DeleteMovement(int id)
+        {
+            var movementToDelete = await _context.Movements.Where(m => m.Id == id).FirstOrDefaultAsync();
+            if (movementToDelete == null)
+            {
+                return NotFound("No existe el movimiento");
+            }
+
+            _context.Movements.Remove(movementToDelete);
+            await _context.SaveChangesAsync();
+
+            return "Movimiento eliminado!";
+        }
+
     }
 }

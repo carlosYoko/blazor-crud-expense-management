@@ -29,7 +29,7 @@
                 <td>@m.User?.Name</td>
                 <td>
                     <button class="btn btn-success">Editar</button>
-                    <button class="btn btn-warning">Eliminar</button>
+                    <button class="btn btn-warning" @onclick="(()=>DeleteMovement(m.Id))">Eliminar</button>
                 </td>
             </tr>
         }
@@ -87,5 +87,11 @@
 
         var movements = await Http.GetFromJsonAsync<List<Movement>>("api/Movement/GetMovements");
         MovementsList = movements;
+    }
+
+    async Task DeleteMovement(int id)
+    {
+        var response = await Http.DeleteAsync($"api/Movement/{id}");
+        await UpdatePage();
     }
 }
