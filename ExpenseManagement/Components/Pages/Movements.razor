@@ -1,12 +1,11 @@
 ﻿@page "/movements"
+@using ExpenseManagement.Shared
 @attribute [StreamRendering]
-
-<PageTitle>Movimientos</PageTitle>
+@inject HttpClient Http
 
 <h1>Movimientos</h1>
 <br />
-
-<table>
+<table class="table">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -15,69 +14,72 @@
             <th scope="col">Cantidad</th>
             <th scope="col">Tipo</th>
             <th scope="col">Nombre</th>
+
             <th scope="col">Opciones</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>20/08/2024</td>
-            <td>Comision</td>
-            <td>15000€</td>
-            <td>Ingreso</td>
-            <td>Carlos Gimenez</td>
-        </tr>
-    </tbody>
-</table>
-<br/>
 
-<h3>Nuevo movimiento</h3>
+@*         @foreach (var movimiento in MovementList)
+        {
+            <tr>
+                <th scope="row">@movimiento.Id</th>
+                <th scope="row">@movimiento.Date</th>
+                <th scope="row">@movimiento.Description</th>
+                <th scope="row">@movimiento.Quantity</th>
+                <th scope="row">@movimiento.Type</th>
+                <th scope="row">@movimiento.User.Name</th>
+                <td>
+                    <button class="btn btn-success">Editar</button>
+                    <button class="btn btn-warning">Eliminar</button>
+                </td>
+            </tr>
+        } *@
+</tbody>
+</table>
+<br />
+
+<h3>Nuevo Movimiento</h3>
 
 <label>Usuario</label>
-<select class="form-control">
-    <option selected value="Ingreso">Seleccionar usuario</option>
-    <option selected value="Gasto">Carlos Gimenez</option>
-</select>
-
-<label>Cantidad</label>
-<input class="form-control" type="number"/>
-
+<EditForm Model="@movement">
+    <InputSelect class="form-control" @bind-Value="@movement.UserId">
+        <option selected value=0>Elegir Usuario</option>
+        @foreach (var user in UserList)
+        {
+            <option value="@user.Id">@user.Name</option>
+        }
+    </InputSelect>
+</EditForm>
+<label>Contidad</label>
+<input class="form-control" type="number" @bind-value=movement.Quantity />
 <label>Tipo</label>
-<select class="form-control">
+<select class="form-control" @bind="movement.Type">
     <option selected value="Ingreso">Ingreso</option>
     <option selected value="Gasto">Gasto</option>
 </select>
-
 <label>Descripcion</label>
-<input type="text" class="form-control"/>
-<br />
 
-<button class="btn btn-primary">Guardar</button>
-<label>Procesando...</label>
+<input type="text" class="form-control" @bind-value=movement.Description />
+<br />
+<button class="btn btn-primary" @onclick=NewMovement>Guardar</button>
+
 
 @code {
-    private WeatherForecast[]? forecasts;
+    public static List<User> UserList = new List<User>();
+    User MyUser = new User();
+    // public static List<Movement> MovementList = new List<Movement>();
+    Movement movement = new Movement();
 
     protected override async Task OnInitializedAsync()
     {
-        // Simulate asynchronous loading to demonstrate streaming rendering
-        await Task.Delay(500);
-
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
+        var users = await Http.GetFromJsonAsync<List<User>>("api/User/GetUsers");
+        UserList = users;
     }
 
-    private class WeatherForecast
+    async Task NewMovement()
     {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        var respuesta = await Http.PostAsJsonAsync("api/Movement/NewMovement", movement); 
     }
+
 }
