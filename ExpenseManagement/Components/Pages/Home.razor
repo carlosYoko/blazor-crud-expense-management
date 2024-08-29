@@ -9,16 +9,21 @@
 Estado de la conexion actual:
 <br />
 <p>@ServerConnection</p>
-<p>Conectando con la tabla de usuarios</p>
+<p>@UserConnection</p>
 <p>Conectando con la tabla de movimientos</p>
 
 @code{
     string ServerConnection = "En espera...";
+    string UserConnection = "En espera...";
 
     async Task TryConeection()
     {
-        var response = await Http.GetStringAsync("https://localhost:7148/api/user/serverconnection");
+        var response = await Http.GetStringAsync("https://localhost:7148/api/User/ServerConnection");
+        var userResponse = await Http.GetStringAsync("https://localhost:7148/api/User/UserConnection");
         ServerConnection = response;
+        UserConnection = userResponse;
+
+
     }
 
     protected override async Task OnInitializedAsync()
