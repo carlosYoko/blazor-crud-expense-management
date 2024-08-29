@@ -6,28 +6,23 @@ namespace ExpenseManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class MovementController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public UserController(ApplicationDbContext context)
+        public MovementController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        [HttpGet("ServerConnection")]
-        public async Task<ActionResult<String>> GetExample()
-        {
-            return "Server is run...";
-        }
 
-        [HttpGet("UserConnection")]
+        [HttpGet("MovementConnection")]
         public async Task<ActionResult<string>> GetUserConnection()
         {
             try
             {
                 var response = await _context.Users.ToListAsync();
-                return "Conexion realizada a la tabla Users!";
+                return "Conexion realizada a la tabla Movements!";
             }
             catch (Exception ex)
             {
