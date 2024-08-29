@@ -1,0 +1,83 @@
+﻿@page "/movements"
+@attribute [StreamRendering]
+
+<PageTitle>Movimientos</PageTitle>
+
+<h1>Movimientos</h1>
+<br />
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>20/08/2024</td>
+            <td>Comision</td>
+            <td>15000€</td>
+            <td>Ingreso</td>
+            <td>Carlos Gimenez</td>
+        </tr>
+    </tbody>
+</table>
+<br/>
+
+<h3>Nuevo movimiento</h3>
+
+<label>Usuario</label>
+<select class="form-control">
+    <option selected value="Ingreso">Seleccionar usuario</option>
+    <option selected value="Gasto">Carlos Gimenez</option>
+</select>
+
+<label>Cantidad</label>
+<input class="form-control" type="number"/>
+
+<label>Tipo</label>
+<select class="form-control">
+    <option selected value="Ingreso">Ingreso</option>
+    <option selected value="Gasto">Gasto</option>
+</select>
+
+<label>Descripcion</label>
+<input type="text" class="form-control"/>
+<br />
+
+<button class="btn btn-primary">Guardar</button>
+<label>Procesando...</label>
+
+@code {
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = startDate.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = summaries[Random.Shared.Next(summaries.Length)]
+        }).ToArray();
+    }
+
+    private class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}
