@@ -1,11 +1,28 @@
 ﻿@page "/"
+@inject HttpClient Http
 
 <PageTitle>Inicio</PageTitle>
 
 <h1>Expense Management</h1>
+<br />
 
 Estado de la conexion actual
 <br />
 <p>Conectando con el servidor</p>
 <p>Conectando con la tabla de usuarios</p>
 <p>Conectando con la tabla de movimientos</p>
+
+@code{
+    string ServerConnection = "En espera...";
+
+    async Task TryConeection()
+    {
+        var response = await Http.GetStringAsync("https://localhost:7148/api/user/serverconnection");
+        ServerConnection = response;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await TryConeection();
+    }
+}
