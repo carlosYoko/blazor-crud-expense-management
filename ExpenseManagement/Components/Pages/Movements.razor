@@ -14,17 +14,30 @@
             <th scope="col">Cantidad</th>
             <th scope="col">Tipo</th>
             <th scope="col">Nombre</th>
-
             <th scope="col">Opciones</th>
         </tr>
     </thead>
     <tbody>
-</tbody>
+        @foreach (var m in MovementsList)
+        {
+            <tr>
+                <th scope="row">@m.Id</th>
+                <td>@m.Date</td>
+                <td>@m.Description</td>
+                <td>@m.Quantity</td>
+                <td>@m.Type</td>
+                <td>@m.User?.Name</td>
+                <td>
+                    <button class="btn btn-success">Editar</button>
+                    <button class="btn btn-warning">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 <br />
 
 <h3>Nuevo Movimiento</h3>
-
 <label>Usuario</label>
 <EditForm Model="@movement">
     <InputSelect class="form-control" @bind-Value="@movement.UserId">
@@ -48,21 +61,31 @@
 <br />
 <button class="btn btn-primary" @onclick="NewMovement">Guardar</button>
 
-
-
 @code {
     public static List<User> UserList = new List<User>();
+    public static List<Movement> MovementsList = new List<Movement>();
+
     User MyUser = new User();
     Movement movement = new Movement();
 
     protected override async Task OnInitializedAsync()
     {
-        var users = await Http.GetFromJsonAsync<List<User>>("api/User/GetUsers");
-        UserList = users;
+        await UpdatePage();
     }
 
     async Task NewMovement()
     {
-        var respuesta = await Http.PostAsJsonAsync("api/Movement/NewMovement", movement); 
+        var respuesta = await Http.PostAsJsonAsync("api/Movement/NewMovement", movement);
+
+        await UpdatePage();
+    }
+
+    async Task UpdatePage()
+    {
+        var users = await Http.GetFromJsonAsync<List<User>>("api/User/GetUsers");
+        UserList = users;
+
+        var movements = await Http.GetFromJsonAsync<List<Movement>>("api/Movement/GetMovements");
+        MovementsList = movements;
     }
 }

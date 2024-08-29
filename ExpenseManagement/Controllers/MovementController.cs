@@ -38,5 +38,12 @@ namespace ExpenseManagement.Controllers
             await _context.SaveChangesAsync();
             return "Movimiento guardado con exito!";
         }
+
+        [HttpGet("GetMovements")]
+        public async Task<ActionResult<List<Movement>>> GetMovements()
+        {
+            var movements = await _context.Movements.Include(u => u.User).ToListAsync();
+            return movements;
+        }
     }
 }
