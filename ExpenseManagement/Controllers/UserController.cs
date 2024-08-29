@@ -1,4 +1,5 @@
 ﻿using ExpenseManagement.Data;
+using ExpenseManagement.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +34,14 @@ namespace ExpenseManagement.Controllers
             {
                 return "Error de conexion";
             }
+        }
+
+        [HttpPost("NewUser")]
+        public async Task<ActionResult<string>> NewUser(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return "Guardado";
         }
     }
 }

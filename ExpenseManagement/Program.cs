@@ -14,6 +14,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionString"));
 });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7148") });
+
 
 var app = builder.Build();
 
