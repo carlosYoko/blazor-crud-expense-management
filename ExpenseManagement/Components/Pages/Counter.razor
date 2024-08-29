@@ -3,9 +3,39 @@
 
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
+<h1>Usuarios</h1>
 
-<p role="status">Current count: @currentCount</p>
+<p>Tabla general de usuarios</p>
+
+<table class="table">
+<thead> 
+    <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+            <td>Carlos Gimenez</td>
+            <td>carlos.gimene@example.com</td>
+    </tr>
+</tbody>
+</table>
+
+<br />
+
+<label>Nombre</label>
+<input type="text" />
+<label>Email</label>
+<input type="text" />
+
+<br/>
+
+<button class="btn btn-primary">Crear usuario</button>
+
+<br/>
+
+<label>Procesando...</label>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
