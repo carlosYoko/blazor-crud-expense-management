@@ -28,7 +28,7 @@
                 <td>@m.Type</td>
                 <td>@m.User?.Name</td>
                 <td>
-                    <button class="btn btn-success">Editar</button>
+                    <button class="btn btn-success" @onclick="(()=>Asign(m))">Editar</button>
                     <button class="btn btn-warning" @onclick="(()=>DeleteMovement(m.Id))">Eliminar</button>
                 </td>
             </tr>
@@ -56,10 +56,34 @@
     <option selected value="Gasto">Gasto</option>
 </select>
 <label>Descripcion</label>
-
 <input type="text" class="form-control" @bind-value=movement.Description />
 <br />
 <button class="btn btn-primary" @onclick="NewMovement">Guardar</button>
+<br />
+<br />
+
+<h3>Editar movimientos</h3>
+<EditForm Model="@movementToEdit">
+    <InputSelect class="form-control" @bind-Value="@movementToEdit.UserId">
+        <option selected value=0>Elegir Usuario</option>
+        @foreach (var user in UserList)
+        {
+            <option value="@user.Id">@user.Name</option>
+        }
+    </InputSelect>
+</EditForm>
+<label>Contidad</label>
+<input class="form-control" type="number" @bind-value=movementToEdit.Quantity />
+<label>Tipo</label>
+<select class="form-control" @bind="movementToEdit.Type">
+    <option selected value="Ingreso">Ingreso</option>
+    <option selected value="Gasto">Gasto</option>
+</select>
+<label>Descripcion</label>
+<input type="text" class="form-control" @bind-value=movementToEdit.Description />
+<br />
+<button class="btn btn-primary" @onclick="SaveChanges">Guardar cambios</button>
+
 
 @code {
     public static List<User> UserList = new List<User>();
@@ -67,6 +91,7 @@
 
     User MyUser = new User();
     Movement movement = new Movement();
+    Movement movementToEdit = new Movement();
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,6 +117,17 @@
     async Task DeleteMovement(int id)
     {
         var response = await Http.DeleteAsync($"api/Movement/{id}");
+        await UpdatePage();
+    }
+
+    async Task Asign(Movement movement)
+    {
+        movementToEdit = movement;
+    }
+
+    async Task SaveChanges()
+    {
+        var response = await Http.PutAsJsonAsync($"api/Movement/{movementToEdit.Id}", movementToEdit);
         await UpdatePage();
     }
 }

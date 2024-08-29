@@ -62,5 +62,24 @@ namespace ExpenseManagement.Controllers
             return "Movimiento eliminado!";
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<string>> UpdateMovement(Movement movement)
+        {
+            var movementToUpdate = await _context.Movements.FindAsync(movement.Id);
+            if (movementToUpdate == null)
+            {
+                return BadRequest("No existe el movimiento");
+            }
+
+            movementToUpdate.Date = movement.Date;
+            movementToUpdate.Quantity = movement.Quantity;
+            movementToUpdate.Type = movement.Type;
+            movementToUpdate.Description = movement.Description;
+            movementToUpdate.UserId = movement.UserId;
+
+            await _context.SaveChangesAsync();
+
+            return "Movimeinto actualizado";
+        }
     }
 }
