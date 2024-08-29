@@ -43,5 +43,12 @@ namespace ExpenseManagement.Controllers
             await _context.SaveChangesAsync();
             return "Guardado";
         }
+
+        [HttpGet("GetUsers")]
+        public async Task<ActionResult<List<User>>> GetUsers()
+        {
+            var users = await _context.Users.ToListAsync();
+            return users;
+        }
     }
 }

@@ -12,15 +12,18 @@
 <table class="table">
 <thead> 
     <tr>
-            <th>Nombre</th>
-            <th>Email</th>
+       <th>Nombre</th>
+       <th>Email</th>
     </tr>
 </thead>
 <tbody>
-    <tr>
-            <td>Carlos Gimenez</td>
-            <td>carlos.gimene@example.com</td>
-    </tr>
+    @foreach(var i in UsersList)
+    {
+         <tr>
+            <td>@i.Name</td>
+            <td>@i.Email</td>
+        </tr>
+    }
 </tbody>
 </table>
 
@@ -43,10 +46,24 @@
 @code {
     string Response = "";
     User user = new User();
+    public static List<User> UsersList = new List<User>();
 
     async Task NewUser()
     {
         var response = await Http.PostAsJsonAsync("api/User/NewUser", user);
         Response = await response.Content.ReadAsStringAsync();
+     
+        await Update();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Update();
+    }
+
+    async Task Update()
+    {
+        var users = await Http.GetFromJsonAsync<List<User>>("api/User/GetUsers");
+        UsersList = users;
     }
 }
